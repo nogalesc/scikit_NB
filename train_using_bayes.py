@@ -1,6 +1,11 @@
 # Author: Chris Nogales
 # Comment: I quelched some conversion warning, python -W ignore foo.py
 
+# CSC (Compressed Sparse Column) and 
+#CSR (Compressed Sparse Row) are more compact and efficient, but difficult to construct "from scratch". 
+#Coo (Coordinate) and DOK (Dictionary of Keys) are easy to construct, and can then be converted to CSC or CSR via matrix.tocsc() or matrix.tocsr()'
+
+
 #!/usr/bin/python
 import pdb  # for DEBUG
 import os
@@ -8,16 +13,28 @@ import svmlight
 import numpy as np # I need dense arrays?
 import csv   # Save features to csv file
 import matplotlib.pyplot as plt # I want nice plots
-
-from scipy.sparse import coo_matrix # Sparse matrix in coordinate format
+#from numpy import array
+from scipy import sparse
+#from scipy.sparse import coo_matrix # Sparse matrix in COO coordinate format
 from sklearn.datasets import load_svmlight_file
 from sklearn.cross_validation import train_test_split
 from sklearn.naive_bayes import MultinomialNB # I only need binomial
 #from sklearn.naive_bayes import GaussianNB # I only need binomial
 #from sklearn.naive_bayes import MultinomialNB
 
+# --for SPARSE MATRIX --#
+#>>> from scipy.sparse import lil_matrix
+#>>> from scipy.sparse.linalg import spsolve
+#>>> from numpy.linalg import solve, norm
+#>>> from numpy.random import rand
+
 
 #---------functions--------#
+def sparse_max_row(csr_mat):
+    ret = np.maximum.reduceat(csr_mat.data, csr_mat.indptr[:-1])
+    ret[np.diff(csr_mat.indptr) == 0] = 0
+    return ret
+    
 def plot_coo_matrix(m):
     if not isinstance(m, coo_matrix):
         m = coo_matrix(m)
@@ -85,9 +102,18 @@ print pred
 ###############
 score = clf.score(X_test, y_test) 
 print score
-plt.spy(X_test)
-plt.show()
-plt.hold(True)
+# nice plot:
+# plt.spy(X_test)
+# plt.show()
+# plt.hold(True)
+
+# IMPORTANT:  Compressed Sparse Row format (X and X_test)
+
+#X_test_dense = X_test.todense()
+X_test_array = X_test.toarray()
+# Save output to a csv file in order to visulize in matlab:
+np.savetxt("bar.csv", X_test_array, delimiter=",")
+
 
 # ax = plot_coo_matrix(X_test)
 # ax.figure.show()
