@@ -88,7 +88,6 @@ print "Done creating GaussianNB classifier ..."
 ###############
 
 X_test, y_test = load_svmlight_file("./30_shuffled_features") # Change this later
-#pdb.set_trace() # BREAKPOINT (press c to continue)
 print "This is the size of X_tes: "
 print X_test.shape #
 print "This is the size of y_test: "
@@ -97,6 +96,7 @@ print X_test
 pred = clf.predict(X_test);
 print "Predictions: "
 print pred
+#pdb.set_trace() # BREAKPOINT (press c to continue)
 
 
 ###############
@@ -110,9 +110,16 @@ print score
 # IMPORTANT:  Compressed Sparse Row format (X and X_test)
 
 #X_test_dense = X_test.todense()
+X_train_array = X.toarray()
 X_test_array = X_test.toarray()
+#y_test_array = y_test.toarray()
+#pred_test_array = pred_test.toarray()
 # Save output to a csv file in order to visulize in matlab:
-np.savetxt("bar.csv", X_test_array, delimiter=",")
+np.savetxt("X_train.csv", X_train_array, delimiter=",")
+np.savetxt("y_train.csv", y, delimiter=",")
+np.savetxt("X_test.csv", X_test_array, delimiter=",")
+np.savetxt("y_test.csv", y_test, delimiter=",")
+np.savetxt("pred_test.csv", pred, delimiter=",")
 
 
 # ax = plot_coo_matrix(X_test)
