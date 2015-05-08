@@ -1,5 +1,5 @@
 close all; clc; clear;
-my_feature = 5;
+my_feature = 1;
 % Visualization of features extracted
 % Compare one feature for a pos and negt example in the train data.
 M_train = csvread('X_train.csv');
